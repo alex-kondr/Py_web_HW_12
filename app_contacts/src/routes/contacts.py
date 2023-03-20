@@ -8,7 +8,7 @@ from src.schemas.contacts import ContactModel, ContactResponse, ContactUpdate, C
 from src.repository import contacts as repository_contacts
 
 
-router = APIRouter(prefix="/contacts")#, responses=ContactResponse)
+router = APIRouter(prefix="/contacts", tags=["contacs"])
 
 
 @router.get("/", response_model=List[ContactResponse])

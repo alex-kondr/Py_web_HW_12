@@ -3,11 +3,13 @@ from typing import List, Optional
 
 from pydantic import BaseModel, Field, EmailStr, constr
 
+from src.database.models import Group, User
+
 
 class ContactBase(BaseModel):
     first_name: str = Field(min_length=3, max_length=50)
     last_name: str = Field(min_length=3, max_length=50)
-    email: Optional[EmailStr]    
+    # email: Optional[EmailStr]    
     phone: Optional[
         constr(
             strip_whitespace=True,
@@ -17,7 +19,11 @@ class ContactBase(BaseModel):
       
         
 class ContactModel(ContactBase):
+    email: Optional[EmailStr]
     birthday: Optional[date]
+    job: str
+    groups: List[Group]
+    user: User
     
     
 class ContactUpdate(ContactModel):

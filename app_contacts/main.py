@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request
 import uvicorn
 import time
 
-from src.routes import contacts
+from src.routes import contacts, auth
 
 
 app = FastAPI()
@@ -17,6 +17,8 @@ async def add_process_time_header(request: Request, call_next):
 
 
 app.include_router(contacts.router, prefix="/api")
+# app.include_router(contacts.router, prefix="/api", tags=["contac"])
+app.include_router(auth.router, prefix="/api")
 
 
 @app.get("/healthchecker")

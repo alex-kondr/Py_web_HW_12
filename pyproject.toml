@@ -12,12 +12,13 @@ python = "^3.10"
 fastapi = "^0.94.1"
 uvicorn = "^0.21.1"
 fastapi-jwt-auth = "^0.5.0"
-python-jose = "^3.3.0"
+python-jose = {extras = ["cryptografy"], version = "^3.3.0"}
 sqlalchemy = "^2.0.6"
-passlib = "^1.7.4"
+passlib = {extras = ["bcrypt"], version = "^1.7.4"}
 python-multipart = "^0.0.6"
 psycopg2 = "^2.9.5"
 bcrypt = "^4.0.1"
+libgravatar = "^1.0.4"
 
 
 [build-system]

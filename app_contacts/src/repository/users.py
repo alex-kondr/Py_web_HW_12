@@ -9,7 +9,7 @@ async def get_user_by_email(email: str, db: Session) -> User:
     return db.query(User).filter(User.email == email).first()
 
 
-async def get_user_by_phone(phone, str, db: Session) -> User:
+async def get_user_by_phone(phone: str, db: Session) -> User:
     return db.query(User).filter(User.phone == phone).first()
 
 

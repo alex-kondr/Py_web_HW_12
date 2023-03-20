@@ -6,14 +6,14 @@ from pydantic import BaseModel, Field, EmailStr, constr
 
 class UserModel(BaseModel):
     username: str = Field(min_length=5, max_length=16)
-    email: Optional[EmailStr]
-    phone: Optional[
-        constr(
-            strip_whitespace=True,
-            regex=r"^(\+)[1-9][0-9\-\(\)]{9,16}$",
-        )
-    ]
     password: str = Field(min_length=6, max_length=10)
+    email: Optional[EmailStr]
+    # phone: Optional[
+    #     constr(
+    #         strip_whitespace=True,
+    #         regex=r"^(\+)[1-9][0-9\-\(\)]{9,16}$",
+    #     )
+    # ]
     
 
 class UserDB(BaseModel):
