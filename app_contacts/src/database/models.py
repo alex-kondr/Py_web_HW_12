@@ -12,8 +12,8 @@ contact_m2m_group = Table(
     "contact_m2m_group",
     Base.metadata,
     Column("id", Integer, primary_key=True),
-    Column("contact_id", Integer, ForeignKey("contact.id", ondelete="Cascade")),
-    Column("group_id", Integer, ForeignKey("group.id", ondelete="Cascade")),
+    Column("contact_id", Integer, ForeignKey("contacts.id", ondelete="Cascade")),
+    Column("group_id", Integer, ForeignKey("groups.id", ondelete="Cascade")),
 )
 
 
@@ -35,7 +35,7 @@ class Contact(Base):
 class Group(Base):
     __tablename__ = "groups"
     __table_args__ = (
-        UniqueConstraint("name", "user_id", name="unique_group_user")
+        UniqueConstraint("name", "user_id", name="unique_group_user"),
     )
     id = Column(Integer, primary_key=True)
     name = Column(String(50), nullable=False, unique=True)

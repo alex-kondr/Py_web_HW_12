@@ -1,5 +1,3 @@
-from typing import List
-
 from fastapi import APIRouter, HTTPException, Depends, status, Security
 from fastapi.security import OAuth2PasswordRequestForm, HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session
@@ -21,7 +19,7 @@ async def singup(body: UserModel, db: Session = Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Account already exists")
     body.password = auth_service.get_password_hash(body.password)
     new_user = await repository_users.create_user(body, db)
-    return {"user": new_user, "detail": "User sussssfully created"}
+    return {"user": new_user, "detail": "User sussfully created"}
 
 
 @router.post("/login", response_model=TokenModel)
@@ -35,6 +33,7 @@ async def login(body: OAuth2PasswordRequestForm = Depends(), db: Session = Depen
     
     access_token = await auth_service.create_access_token(data={"sub": user.email})
     refresh_token = await auth_service.create_refresh_token(data={"sub": user.email})
+    await repository_users.update_token(user, refresh_token, db)
     return {"access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer"}
 
 

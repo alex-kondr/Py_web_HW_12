@@ -15,7 +15,7 @@ async def get_group(group_id: int, user: User, db: Session) -> Group:
     return db.query(Group).filter(and_(Group.id == group_id, Group.user_id == user.id)).first()
 
 
-async def create_tag(body: GroupModel, user: User, db: Session) -> Group:
+async def create_group(body: GroupModel, user: User, db: Session) -> Group:
     group = Group(name=body.name, user=user)
     db.add(group)
     db.commit()

@@ -5,7 +5,7 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from src.database.db import db_url_elefant
+from src.database.db import db_url
 from src.database.models import Base
 
 # this is the Alembic Config object, which provides
@@ -21,8 +21,7 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 target_metadata = Base.metadata
-config.set_main_option("sqlalchemy.url", db_url_elefant)
-# target_metadata = None
+config.set_main_option("sqlalchemy.url", db_url)
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

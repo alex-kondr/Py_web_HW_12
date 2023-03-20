@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import and_
 
 from src.database.models import Contact, User
-from src.schemas.contacts import ContactModel, ContactUpdate, ContactEmailUpdate
+from src.schemas.contacts import ContactBase, ContactModel, ContactUpdate, ContactEmailUpdate
 
 
 async def get_contacts(skip: int, limit: int, user: User, db: Session) -> List[Contact]:
@@ -46,7 +46,7 @@ async def get_contact_by_fields(first_name: str,
     return contact.all()
 
 
-async def create_contact(body: ContactModel, user: User, db: Session) -> Contact:
+async def create_contact(body: ContactBase, user: User, db: Session) -> Contact:
     contact = Contact(**body.dict(), user=user)
     # contact.user = user
     db.add(contact)

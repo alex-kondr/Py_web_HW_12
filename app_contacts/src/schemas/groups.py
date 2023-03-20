@@ -1,4 +1,8 @@
+from typing import Optional
+
 from pydantic import BaseModel
+
+from src.schemas.users import UserModel
 
 
 class GroupBase(BaseModel):
@@ -13,7 +17,7 @@ class GroupUpdate(GroupBase):
     pass
 
 
-class GroupRepsponse(GroupBase):
+class GroupResponse(GroupBase):
     id: int
     
     class Config:

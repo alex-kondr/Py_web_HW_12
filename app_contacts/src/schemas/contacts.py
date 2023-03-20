@@ -3,7 +3,9 @@ from typing import List, Optional
 
 from pydantic import BaseModel, Field, EmailStr, constr
 
-from src.database.models import Group, User
+# from src.database.models import Group, User
+from src.schemas.groups import GroupBase
+from src.schemas.users import UserModel
 
 
 class ContactBase(BaseModel):
@@ -22,8 +24,7 @@ class ContactModel(ContactBase):
     email: Optional[EmailStr]
     birthday: Optional[date]
     job: str
-    groups: List[Group]
-    user: User
+    groups: List[GroupBase]
     
     
 class ContactUpdate(ContactModel):
