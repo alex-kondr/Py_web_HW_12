@@ -2,18 +2,19 @@ from typing import List
 from datetime import datetime, timedelta
 
 from sqlalchemy.orm import Session
+from sqlalchemy import and_
 
-from src.database.models import Contact
+from src.database.models import Contact, User
 from src.schemas.contacts import ContactModel, ContactUpdate, ContactEmailUpdate
 
 
-async def get_contacts(skip: int, limit: int, db: Session) -> List[Contact]:
-    return db.query(Contact).offset(skip).limit(limit).all()
+async def get_contacts(skip: int, limit: int, user: User, db: Session) -> List[Contact]:
+    return db.query(Contact).filter(Contact.user_id == user.id).offset(skip).limit(limit).all()
 
 
 
-async def get_contact(contact_id: int, db: Session) -> Contact:
-    return db.query(Contact).filter(Contact.id == contact_id).first()
+async def get_contact(contact_id: int, user: User, db: Session) -> Contact:
+    return db.query(Contact).filter(and_(Contact.id == contact_id, Contact.user_id == user.id)).first()
 
 
 async def get_contact_by_fields(first_name: str,
@@ -21,39 +22,41 @@ async def get_contact_by_fields(first_name: str,
                                phone: str,
                                email: str,
                                days_before_birth: int,
+                               user: User,
                                db: Session) -> List[Contact]:
     
     contact = db.query(Contact)
     
     if first_name:
-        contact = contact.filter(Contact.first_name == first_name)
+        contact = contact.filter(and_(Contact.first_name == first_name, Contact.user_id == user.id))
         
     if last_name:
-        contact = contact.filter(Contact.last_name == last_name)
+        contact = contact.filter(and_(Contact.last_name == last_name, Contact.user_id == user.id))
     
     if phone:
-        contact = contact.filter(Contact.phone == phone)
+        contact = contact.filter(and_(Contact.phone == phone, Contact.user_id == user.id))
         
     if email:
-        contact = contact.filter(Contact.email == email)        
+        contact = contact.filter(and_(Contact.email == email, Contact.user_id == user.id))        
     
     start_date = datetime.now()
     end_date = start_date + timedelta(days=days_before_birth)     
-    contact = contact.filter(Contact.birthday.between(start_date, end_date))
+    contact = contact.filter(and_(Contact.birthday.between(start_date, end_date), Contact.user_id == user.id))
     
     return contact.all()
 
 
-async def create_contact(body: ContactModel, db: Session) -> Contact:
-    contact = Contact(**vars(body))
+async def create_contact(body: ContactModel, user: User, db: Session) -> Contact:
+    contact = Contact(**body.dict(), user=user)
+    # contact.user = user
     db.add(contact)
     db.commit()
     db.refresh(contact)
     return contact
 
 
-async def update_contact(contact_id: int, body: ContactUpdate, db: Session):
-    contact = db.query(Contact).filter(Contact.id == contact_id).first()
+async def update_contact(contact_id: int, body: ContactUpdate, user: User, db: Session):
+    contact = db.query(Contact).filter(and_(Contact.id == contact_id, Contact.user_id == user.id)).first()
     
     if contact:        
         contact.first_name = body.first_name
@@ -66,8 +69,8 @@ async def update_contact(contact_id: int, body: ContactUpdate, db: Session):
     return contact
 
 
-async def update_email_contact(contact_id: int, body: ContactEmailUpdate, db: Session):
-    contact = db.query(Contact).filter(Contact.id == contact_id).first()
+async def update_email_contact(contact_id: int, body: ContactEmailUpdate, user: User, db: Session):
+    contact = db.query(Contact).filter(and_(Contact.id == contact_id, Contact.user_id == user.id)).first()
     
     if contact:
         contact.email = body.email
@@ -76,8 +79,8 @@ async def update_email_contact(contact_id: int, body: ContactEmailUpdate, db: Se
     return contact
 
 
-async def remove_contact(contact_id: int, db: Session):
-    contact = db.query(Contact).filter(Contact.id == contact_id).first()
+async def remove_contact(contact_id: int, user: User, db: Session):
+    contact = db.query(Contact).filter(and_(Contact.id == contact_id, Contact.user_id == user.id)).first()
     
     if contact:
         db.delete(contact)
