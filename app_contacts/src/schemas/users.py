@@ -19,6 +19,7 @@ class UserModel(BaseModel):
 class UserUpdate(BaseModel):
     first_name: Optional[str]
     last_name: Optional[str]
+    username: str = Field(min_length=5, max_length=16)
     birthday: Optional[date]
     job: Optional[str]
     email: Optional[EmailStr]
@@ -27,8 +28,7 @@ class UserUpdate(BaseModel):
             strip_whitespace=True,
             regex=r"^(\+)[1-9][0-9\-\(\)]{9,18}$",
         )
-    ]
-    
+    ]    
     
 
 class UserDB(UserUpdate):
