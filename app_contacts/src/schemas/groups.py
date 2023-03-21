@@ -16,7 +16,6 @@ class GroupModel(GroupBase):
 class GroupUpdate(GroupBase):
     pass
 
-
 class GroupResponse(GroupBase):
     id: int
     

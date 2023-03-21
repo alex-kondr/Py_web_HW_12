@@ -32,7 +32,7 @@ async def update_group(group_id: int, body: GroupModel, user: User, db: Session)
 
 
 async def remove_group(group_id: int, user: User, db: Session) -> Group | None:
-    group = db.query(Group).filter(and_(Group.id == group_id, Group.user_id == user.id))
+    group = db.query(Group).filter(and_(Group.id == group_id, Group.user_id == user.id)).first()
     if group:
         db.delete(group)
         db.commit()

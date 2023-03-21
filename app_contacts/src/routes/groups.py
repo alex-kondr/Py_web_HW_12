@@ -16,17 +16,17 @@ router = APIRouter(prefix="/groups", tags=["groups"])
 @router.get("/", response_model=List[GroupResponse])
 async def read_groups(skip: int = 0, limit: int = 100, db: Session = Depends(get_db),
                         current_user: User = Depends(auth_service.get_current_user)):
-    contacts = await repository_groups.get_groups(skip, limit, current_user, db)
-    return contacts
+    groups = await repository_groups.get_groups(skip, limit, current_user, db)
+    return groups
 
 
 @router.get("/{group_id}", response_model=GroupResponse)
-async def read_group(contact_id: int, db: Session = Depends(get_db),
+async def read_group(group_id: int, db: Session = Depends(get_db),
                        current_user: User = Depends(auth_service.get_current_user)):
-    contact = await repository_groups.get_groups(contact_id, current_user, db)
-    if contact is None:
+    group = await repository_groups.get_groups(group_id, current_user, db)
+    if group is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Contact not found")
-    return contact
+    return group
 
 
 @router.post("/", response_model=GroupResponse, status_code=status.HTTP_201_CREATED)
@@ -36,18 +36,18 @@ async def create_group(body: GroupModel, db: Session = Depends(get_db),
 
 
 @router.put("/{group_id}", response_model=GroupResponse)
-async def update_contact(body: GroupUpdate, contact_id: int, db: Session = Depends(get_db),
+async def update_group(body: GroupUpdate, group_id: int, db: Session = Depends(get_db),
                          current_user: User = Depends(auth_service.get_current_user)):
-    contact = await repository_groups.update_group(contact_id, body, current_user, db)    
-    if contact is None:
+    group = await repository_groups.update_group(group_id, body, current_user, db)    
+    if group is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Contact not found")
-    return contact
+    return group
 
 
 @router.delete("/{group_id}", response_model=GroupResponse, status_code=status.HTTP_202_ACCEPTED)
-async def remove_contact(contact_id: int, db: Session = Depends(get_db),
+async def remove_group(group_id: int, db: Session = Depends(get_db),
                          current_user: User = Depends(auth_service.get_current_user)):
-    contact = await repository_groups.remove_group(contact_id, current_user, db)
-    if contact is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Contact not found")
-    return contact
+    group = await repository_groups.remove_group(group_id, current_user, db)
+    if group is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Group not found")
+    return group

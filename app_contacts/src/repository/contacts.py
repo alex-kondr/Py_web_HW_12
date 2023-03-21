@@ -58,7 +58,7 @@ async def update_contact(contact_id: int, body: ContactUpdate, user: User, db: S
     contact = db.query(Contact).filter(and_(Contact.id == contact_id, Contact.user_id == user.id)).first()
     
     if contact:
-        groups = db.query(Group).filter(Group.id.in_(body.groups)).all()
+        groups = db.query(Group).filter(and_(Group.id.in_(body.groups), Group.user_id == user.id)).all()
         
         contact.first_name = body.first_name
         contact.last_name = body.last_name

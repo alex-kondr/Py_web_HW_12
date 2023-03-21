@@ -38,7 +38,7 @@ class Group(Base):
         UniqueConstraint("name", "user_id", name="unique_group_user"),
     )
     id = Column(Integer, primary_key=True)
-    name = Column(String(50), nullable=False, unique=True)
+    name = Column(String(50), nullable=False)
     user_id = Column(ForeignKey("users.id", ondelete="Cascade"), default=None)
     user = relationship("User", backref="groups")
 
