@@ -17,17 +17,24 @@ class UserModel(BaseModel):
     
     
 class UserUpdate(BaseModel):
-    first_name: str|None
-    last_name: str|None
-    birthday: date|None
-    job: str|None
+    first_name: Optional[str]
+    last_name: Optional[str]
+    birthday: Optional[date]
+    job: Optional[str]
+    email: Optional[EmailStr]
+    phone: Optional[
+        constr(
+            strip_whitespace=True,
+            regex=r"^(\+)[1-9][0-9\-\(\)]{9,18}$",
+        )
+    ]
     
     
 
-class UserDB(UserModel, UserUpdate):
+class UserDB(UserUpdate):
     id: int
     created_at: datetime
-    avatar: str|None
+    avatar: str
     
     class Config:
         orm_mode = True

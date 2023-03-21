@@ -4,14 +4,13 @@ from typing import List, Optional
 from pydantic import BaseModel, Field, EmailStr, constr
 
 # from src.database.models import Group, User
-from src.schemas.groups import GroupBase
+from src.schemas.groups import GroupResponse
 from src.schemas.users import UserModel
 
 
 class ContactBase(BaseModel):
     first_name: str = Field(min_length=3, max_length=50)
     last_name: str = Field(min_length=3, max_length=50)
-    # email: Optional[EmailStr]    
     phone: Optional[
         constr(
             strip_whitespace=True,
@@ -23,8 +22,8 @@ class ContactBase(BaseModel):
 class ContactModel(ContactBase):
     email: Optional[EmailStr]
     birthday: Optional[date]
-    job: str
-    groups: List[GroupBase]
+    job: Optional[str]
+    groups: List[int]
     
     
 class ContactUpdate(ContactModel):
@@ -37,7 +36,8 @@ class ContactEmailUpdate(BaseModel):
 
 class ContactResponse(ContactModel):
     id: int
-    create_at: datetime
+    groups: List[GroupResponse]
+    created_at: datetime
     
     class Config:
         orm_mode = True

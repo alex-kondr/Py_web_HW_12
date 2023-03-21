@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 from sqlalchemy import and_
 
-from src.database.models import Contact, User
+from src.database.models import Contact, User, Group
 from src.schemas.contacts import ContactBase, ContactModel, ContactUpdate, ContactEmailUpdate
 
 
@@ -48,7 +48,6 @@ async def get_contact_by_fields(first_name: str,
 
 async def create_contact(body: ContactBase, user: User, db: Session) -> Contact:
     contact = Contact(**body.dict(), user=user)
-    # contact.user = user
     db.add(contact)
     db.commit()
     db.refresh(contact)
@@ -58,12 +57,16 @@ async def create_contact(body: ContactBase, user: User, db: Session) -> Contact:
 async def update_contact(contact_id: int, body: ContactUpdate, user: User, db: Session):
     contact = db.query(Contact).filter(and_(Contact.id == contact_id, Contact.user_id == user.id)).first()
     
-    if contact:        
+    if contact:
+        groups = db.query(Group).filter(Group.id.in_(body.groups)).all()
+        
         contact.first_name = body.first_name
         contact.last_name = body.last_name
         contact.phone = body.phone
         contact.email = body.email
         contact.birthday = body.birthday
+        contact.job = body.job
+        contact.groups = groups
         db.commit()
         
     return contact
